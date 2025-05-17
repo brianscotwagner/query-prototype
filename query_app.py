@@ -12,11 +12,14 @@ voice_id = "EXAVITQu4vr4xnSDxMaL"
 # UI Layout
 st.set_page_config(page_title="Query - Voice Assistant for Kids")
 st.title("🧠 Query: Your Growing Voice Assistant")
+st.caption("Designed to help kids learn, grow, and explore — one question at a time.")
 
 st.markdown("""
 Query is a kind and curious voice-based assistant that grows with you. 
 Ask it anything — it will listen, respond with empathy, and explain things just right for your age.
 """)
+
+st.info("Try asking something like: 'Why do we sleep?' or 'What’s a black hole?'")
 
 # Initialize session state for message history
 if "chat_history" not in st.session_state:
@@ -58,6 +61,7 @@ if user_input:
             audio_response = requests.post(tts_url, headers=headers, json=payload)
 
             if audio_response.status_code == 200:
+                st.markdown("**🔊 Tap play to hear Query's answer**")
                 st.audio(audio_response.content, format='audio/mp3')
             else:
                 st.error(f"Voice synthesis failed. Status: {audio_response.status_code}")
