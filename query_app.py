@@ -18,24 +18,28 @@ Query is a kind and curious voice-based assistant that grows with you.
 Ask it anything — it will listen, respond with empathy, and explain things just right for your age.
 """)
 
+# Initialize session state for message history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [
+        {"role": "system", "content": "You are Query, a voice-based AI assistant designed for 7-year-old children. Your job is not to impress adults — it's to help the child actually understand things.\n\nNever use a word like 'force', 'gravity', 'atom', or 'energy' unless you explain it immediately with a simple example the child can relate to — like pets, games, food, people, or playgrounds. Do not define things using more technical words. Start from what a 7-year-old already knows.\n\nSpeak in short, clear sentences. Ask if the child wants an example or a story. If they seem confused or ask again, try a different explanation.\n\nYou are kind, curious, and smart — like a great teacher who meets every kid at their level."}
+    ]
+
 user_input = st.text_input("👋 What do you want to talk about?")
 
 if user_input:
     with st.spinner("Query is thinking..."):
         try:
+            # Add user input to chat history
+            st.session_state.chat_history.append({"role": "user", "content": user_input})
+
             # GPT-3.5 response
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are Query, a voice-based AI assistant designed for 7-year-old children. Your job is not to impress adults — it's to help the child actually understand things.\n\nNever use a word like 'force', 'gravity', 'atom', or 'energy' unless you explain it immediately with a simple example the child can relate to — like pets, games, food, people, or playgrounds. Do not define things using more technical words. Start from what a 7-year-old already knows.\n\nSpeak in short, clear sentences. Ask if the child wants an example or a story. If they seem confused or ask again, try a different explanation.\n\nYou are kind, curious, and smart — like a great teacher who meets every kid at their level."
-                    },
-                    {"role": "user", "content": user_input}
-                ],
+                messages=st.session_state.chat_history[-6:],  # limit to last 6 messages
                 max_tokens=200
             )
             text_reply = response.choices[0].message['content']
+            st.session_state.chat_history.append({"role": "assistant", "content": text_reply})
             st.write("**Query says:**", text_reply)
 
             # ElevenLabs TTS
