@@ -52,7 +52,8 @@ if user_input:
             if audio_response.status_code == 200:
                 st.audio(audio_response.content, format='audio/mp3')
             else:
-                st.error("Voice synthesis failed. Try again later.")
+                st.error(f"Voice synthesis failed. Status: {audio_response.status_code}")
+                st.text(audio_response.text)
 
         except Exception as e:
             st.error(f"Something went wrong: {e}")
