@@ -22,10 +22,10 @@ user_input = st.text_input("👋 What do you want to talk about?")
 
 if user_input:
     with st.spinner("Query is thinking..."):
-        # GPT-4 response
+        # GPT-3.5-turbo response
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-4",
+                model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are Query, an intelligent, emotionally aware, developmentally adaptive voice assistant for children. Speak with warmth, clarity, and age-appropriate encouragement. Never use complex jargon or condescending tones. Keep your responses positive, engaging, and kind."},
                     {"role": "user", "content": user_input}
